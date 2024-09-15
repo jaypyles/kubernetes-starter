@@ -10,17 +10,5 @@
       shell: rm -rf $HOME/.kube/config
       become: yes
 
-    - name: Init kubeadm on master node
-      shell: sudo kubeadm init --apiserver-advertise-address=192.168.56.3 --pod-network-cidr=10.244.0.0/16
-      become: yes
-
-    - name: Activate kubectl on master node
-      shell: |
-        rm -rf $HOME/.kube || true
-        mkdir -p $HOME/.kube
-        sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-        sudo chown $(id -u):$(id -g) $HOME/.kube/config
-
-    - name: Apply flannel network config
-      shell: kubectl apply -f kube-flannel.yml
-      become: yes
+- name: Initialize cluster
+  import_playbook: initialize_cluster.yaml

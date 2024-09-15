@@ -1,0 +1,24 @@
+- name: Initialize cluster
+  hosts: k8s_masters
+  become: yes
+  tasks:
+    - name: Init kubeadm on master node
+      shell: sudo kubeadm init --apiserver-advertise-address=192.168.56.3 --pod-network-cidr=10.244.0.0/16
+      become: yes
+
+    - name: Activate kubectl on master node
+      become: true
+      become_user: "{{ ansible_user_id }}"
+      shell: |
+        sudo rm -rf $HOME/.kube || true
+        sudo mkdir -p $HOME/.kube
+        sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+        sudo chown $(id -u):$(id -g) $HOME/.kube/config
+      environment:
+        HOME: "{{ ansible_env.HOME }}"
+
+    - name: Install flannel
+      shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+
+- name: Join nodes to cluster
+  import_playbook: join_nodes_to_cluster.yaml
