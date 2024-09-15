@@ -33,6 +33,11 @@ sudo kubeadm init --apiserver-advertise-address=<HOST_ONLY_ADAPTER_IP> --pod-net
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 ```
 
+- Get the join token
+```bash
+kubeadm token create --print-join-command
+```
+
 ### Worker Node
 
 - Join cluster
@@ -40,4 +45,15 @@ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documen
 ```bash
 #join the cluster
 sudo kubeadm join <MASTER_IP> --token <TOKEN> --discovery-token-ca-cert-hash <HASH>
+```
+
+## Troubleshooting
+
+Using Debian 11 or Ubuntu 22.04, the following steps are required to enable systemd cgroup
+
+```bash
+sudo containerd config default | sudo tee /etc/containerd/config.toml
+sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/config.toml
+sudo service containerd restart
+sudo service kubelet restart
 ```

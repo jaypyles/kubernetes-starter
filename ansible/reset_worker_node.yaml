@@ -1,0 +1,7 @@
+- name: Reset worker nodes
+  hosts: k8s_workers
+  become: yes
+  tasks:
+    - name: Reset kubeadm
+      shell: sudo kubeadm reset --force
+      become: yes
