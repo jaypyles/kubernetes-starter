@@ -34,6 +34,7 @@ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documen
 ```
 
 - Get the join token
+
 ```bash
 kubeadm token create --print-join-command
 ```
@@ -56,4 +57,13 @@ sudo containerd config default | sudo tee /etc/containerd/config.toml
 sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/config.toml
 sudo service containerd restart
 sudo service kubelet restart
+```
+
+This is done manually for now to avoid cert errors:
+
+```bash
+sudo rm -rf $HOME/.kube || true
+sudo mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
