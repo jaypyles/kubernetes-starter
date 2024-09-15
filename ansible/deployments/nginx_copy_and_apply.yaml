@@ -1,0 +1,35 @@
+- name: Copy and apply nginx
+  hosts: k8s_masters
+  become: yes
+  tasks:
+    - name: Copy nginx deployment
+      copy:
+        src: ../../k8s/deployments/nginx/nginx-deployment.yaml
+        dest: /tmp/nginx-deployment.yaml
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Copy react deployment
+      copy:
+        src: ../../k8s/deployments/nginx/react-deployment.yaml
+        dest: /tmp/react-deployment.yaml
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Apply nginx deployment
+      shell: kubectl apply -f /tmp/nginx-deployment.yaml
+
+    - name: Apply react deployment
+      shell: kubectl apply -f /tmp/react-deployment.yaml
+
+    - name: Cleanup nginx
+      file:
+        path: /tmp/nginx-deployment.yaml
+        state: absent
+
+    - name: Cleanup react
+      file:
+        path: /tmp/react-deployment.yaml
+        state: absent
