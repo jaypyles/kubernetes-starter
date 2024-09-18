@@ -67,3 +67,26 @@ sudo mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
+
+# K3S setup
+
+Install k3s
+
+```bash
+curl -sfL https://get.k3s.io | sh -
+```
+
+Get join token
+```bash
+cat /etc/rancher/k3s/k3s.yaml
+```
+
+Join the cluster on the worker node
+
+```bash
+export URL="https://<MASTER_IP>:6443"
+export TOKEN="<<TOKEN>>"
+curl -sfL https://get.k3s.io | K3S_URL=$URL K3S_TOKEN=$TOKEN sh -
+```
+
+

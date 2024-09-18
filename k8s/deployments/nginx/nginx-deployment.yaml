@@ -13,31 +13,10 @@ spec:
         app: nginx-server
     spec:
       containers:
-        - name: nginx-container
-          image: nginx:latest
+        - name: nginx
+          image: jpyles0524/nginx-kube
           ports:
             - containerPort: 80
-          volumeMounts:
-            - name: nginx-config-volume
-              mountPath: /etc/nginx/conf.d
-      volumes:
-        - name: nginx-config-volume
-          configMap:
-            name: nginx-config
-
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: nginx-config
-data:
-  default.conf: |
-    server {
-        listen 80;
-        location / {
-            proxy_pass http://react-service:8080;
-        }
-    }
 
 ---
 apiVersion: v1
